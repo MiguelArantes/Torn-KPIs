@@ -1,9 +1,4 @@
-#FIXME: I need to make a function in this to call when need. 
-
-logging::basicConfig()
-
-token <- "IN HERE"
-
+#FIXME: I need to make a function in this to call when need.
 selection <-
   c(
     "items",
@@ -19,25 +14,33 @@ selection <-
     "factiontree"
   )
 
-link <- c("torn",
-          "user",
-          "market",
-          "company",
-          "faction",
-          "property")
 
-i <- 4
+get.data <- function(toke, i) {
+  logging::basicConfig()
 
-url <- sprintf("https://api.torn.com/%s", link[i])
+  link <- c("torn",
+    "user",
+    "market",
+    "company",
+    "faction",
+    "property")
 
-r <- httr::GET(url, query = list(key = token))
+  url <- sprintf("https://api.torn.com/%s", link[i])
 
-if (httr::status_code(r) == 200) {
-  logging::loginfo(http_status(r)$message)
-} else {
-  logging::logerror(http_status(r)$message)
+  r <- httr::GET(url, query = list(key = token))
+
+  if (httr::status_code(r) == 200) {
+    logging::loginfo(http_status(r)$message)
+  } else {
+    logging::logerror(http_status(r)$message)
+  }
+
+  r_content <- httr::content(r)
+
+  return(r_content)
 }
 
-rContent <- httr::content(r)
-
-str(rContent)
+save.content <- function(prefix, r_content) {
+  prefix <- paste0(prefix, Sys.Date(), ".csv")
+  utils::write.csv(x = r_content, file = prefix)
+}
