@@ -54,9 +54,9 @@ get.data <- function(token, link, selection) {
   }
 
   if (httr::status_code(r) == 200) {
-    logging::loginfo(http_status(r)$message)
+    logging::loginfo(httr::http_status(r)$message)
   } else {
-    logging::logerror(http_status(r)$message)
+    logging::logerror(httr::http_status(r)$message)
   }
 
   r_content <- httr::content(r)
